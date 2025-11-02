@@ -1,6 +1,32 @@
 // Efectos interactivos adicionales
 document.addEventListener('DOMContentLoaded', () => {
     const socialCards = document.querySelectorAll('.social-card');
+    const avatar = document.querySelector('.avatar');
+    const avatarModal = document.getElementById('avatarModal');
+    const closeModal = document.getElementById('closeModal');
+    
+    // Modal de avatar
+    avatar.addEventListener('click', () => {
+        avatarModal.classList.add('active');
+    });
+
+    closeModal.addEventListener('click', (e) => {
+        e.stopPropagation();
+        avatarModal.classList.remove('active');
+    });
+
+    avatarModal.addEventListener('click', (e) => {
+        if (e.target === avatarModal) {
+            avatarModal.classList.remove('active');
+        }
+    });
+
+    // Cerrar modal con ESC
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            avatarModal.classList.remove('active');
+        }
+    });
     
     // Efecto parallax 3D mejorado en hover
     socialCards.forEach(card => {

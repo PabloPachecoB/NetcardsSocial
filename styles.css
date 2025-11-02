@@ -81,7 +81,119 @@ body {
     justify-content: center;
     font-size: 50px;
     box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
-    animation: bounce 2s infinite;
+    overflow: hidden;
+    padding: 0;
+    cursor: pointer;
+    position: relative;
+}
+
+.avatar::before {
+    content: '';
+    position: absolute;
+    width: 120%;
+    height: 120%;
+    background: 
+        radial-gradient(circle, white 2px, transparent 2px);
+    background-size: 15px 15px;
+    animation: sparkleRotate 8s linear infinite;
+    z-index: 1;
+    pointer-events: none;
+    border-radius: 50%;
+}
+
+@keyframes sparkleRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    z-index: 2;
+    position: relative;
+}
+
+/* Modal para la foto expandida */
+.avatar-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+.avatar-modal.active {
+    display: flex;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.avatar-modal-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    animation: modalZoomIn 0.3s ease-out;
+}
+
+@keyframes modalZoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.avatar-modal img {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+.avatar-modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid white;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 1001;
+}
+
+.avatar-modal-close:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: rotate(90deg);
 }
 
 @keyframes bounce {
@@ -131,67 +243,77 @@ body {
 /* Media Queries para responsividad */
 @media (max-width: 480px) {
     .socials-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-        padding: 0 8px;
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 0 10px;
     }
 
     .container {
-        padding: 20px 8px;
+        padding: 15px 10px;
     }
 
     .header {
-        margin-bottom: 30px;
+        margin-bottom: 25px;
     }
 
     .avatar {
-        width: 80px;
-        height: 80px;
-        font-size: 40px;
+        width: 70px;
+        height: 70px;
+        font-size: 35px;
     }
 
     .header h1 {
-        font-size: 1.3rem;
-        margin-bottom: 5px;
+        font-size: 1.8rem;
+        margin-bottom: 8px;
     }
 
     .header p {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
     }
 
     .social-card {
-        aspect-ratio: 1 / 1;
-        border-radius: 12px;
+        aspect-ratio: auto;
+        height: 140px;
+        border-radius: 16px;
     }
 
     .card-inner {
-        padding: 12px 10px;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
+        padding: 20px 25px;
+        justify-content: flex-start;
+        align-items: flex-start;
+        text-align: left;
     }
 
     .icon-wrapper {
-        font-size: 40px;
-        margin-bottom: 6px;
+        font-size: 50px;
+        margin-bottom: 10px;
+        margin-right: 15px;
+        float: left;
     }
 
     .card-content {
-        width: 100%;
+        width: auto;
+        flex: 1;
     }
 
     .card-content h3 {
-        font-size: 0.9rem;
-        margin-bottom: 2px;
-        font-weight: 600;
+        font-size: 1.3rem;
+        margin-bottom: 4px;
+        font-weight: 700;
     }
 
     .username {
-        display: none;
+        display: block;
+        font-size: 0.9rem;
+        margin-bottom: 6px;
+        font-weight: 500;
     }
 
     .description {
-        display: none;
+        display: block;
+        font-size: 0.8rem;
+        margin-bottom: 0;
+        opacity: 0.9;
     }
 
     .btn {
@@ -212,6 +334,7 @@ body {
 
     .footer {
         padding: 20px 10px;
+        margin-top: 30px;
     }
 
     .footer p {
