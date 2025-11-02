@@ -1,5 +1,121 @@
+// Efecto de máquina de escribir
+function typeWriter() {
+    const text = "Pablo Pacheco";
+    const element = document.getElementById('typingName');
+    let index = 0;
+
+    element.innerHTML = '';
+
+    function type() {
+        if (index < text.length) {
+            element.innerHTML += text.charAt(index);
+            index++;
+            setTimeout(type, 100);
+        }
+    }
+
+    type();
+}
+
+// Sistema de partículas conectadas
+class ParticleSystem {
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.particles = [];
+        this.particleCount = window.innerWidth > 768 ? 80 : 40;
+        this.connectionDistance = 150;
+        
+        this.resizeCanvas();
+        this.createParticles();
+        this.animate();
+        
+        window.addEventListener('resize', () => this.resizeCanvas());
+    }
+
+    resizeCanvas() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    }
+
+    createParticles() {
+        this.particles = [];
+        for (let i = 0; i < this.particleCount; i++) {
+            this.particles.push({
+                x: Math.random() * this.canvas.width,
+                y: Math.random() * this.canvas.height,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2,
+                radius: Math.random() * 2 + 1,
+                opacity: Math.random() * 0.5 + 0.3
+            });
+        }
+    }
+
+    update() {
+        this.particles.forEach(particle => {
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+
+            // Rebotar en los bordes
+            if (particle.x < 0 || particle.x > this.canvas.width) {
+                particle.vx *= -1;
+                particle.x = Math.max(0, Math.min(this.canvas.width, particle.x));
+            }
+            if (particle.y < 0 || particle.y > this.canvas.height) {
+                particle.vy *= -1;
+                particle.y = Math.max(0, Math.min(this.canvas.height, particle.y));
+            }
+        });
+    }
+
+    draw() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Dibujar partículas
+        this.particles.forEach(particle => {
+            this.ctx.beginPath();
+            this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+            this.ctx.fillStyle = `rgba(102, 126, 234, ${particle.opacity})`;
+            this.ctx.fill();
+        });
+
+        // Dibujar conexiones
+        for (let i = 0; i < this.particles.length; i++) {
+            for (let j = i + 1; j < this.particles.length; j++) {
+                const dx = this.particles[i].x - this.particles[j].x;
+                const dy = this.particles[i].y - this.particles[j].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < this.connectionDistance) {
+                    const opacity = (1 - distance / this.connectionDistance) * 0.3;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
+                    this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
+                    this.ctx.strokeStyle = `rgba(102, 126, 234, ${opacity})`;
+                    this.ctx.lineWidth = 1;
+                    this.ctx.stroke();
+                }
+            }
+        }
+    }
+
+    animate() {
+        this.update();
+        this.draw();
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
 // Efectos interactivos adicionales
 document.addEventListener('DOMContentLoaded', () => {
+    // Iniciar máquina de escribir
+    typeWriter();
+
+    // Iniciar sistema de partículas
+    const canvas = document.getElementById('particlesCanvas');
+    new ParticleSystem(canvas);
+
     const socialCards = document.querySelectorAll('.social-card');
     const avatar = document.querySelector('.avatar');
     const avatarModal = document.getElementById('avatarModal');
